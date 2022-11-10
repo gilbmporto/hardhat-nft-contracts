@@ -12,18 +12,18 @@ async function storeImages(imagesFilePath) {
     let responses = []
     console.log("Uploading to Pinata!")
     for (fileIndex in files) {
+        let options = {
+            pinataMetadata: {
+                name: `${files[fileIndex]}`,
+            },
+        }
         const readableStreamForFile = fs.createReadStream(`${fullImagesPath}/${files[fileIndex]}`)
         try {
             console.log(`Uploading ${files[fileIndex]}`)
-            const options = {
-                pinataMetadata: {
-                    name: `${files[fileIndex]}`,
-                },
-            }
             const response = await pinata.pinFileToIPFS(readableStreamForFile, options)
             responses.push(response)
         } catch (e) {
-            console.log(e)
+            console.log(e.message)
         }
     }
     return { responses, files }
